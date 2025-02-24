@@ -1,0 +1,2 @@
+C:\Users\iHugo\Desktop\invemt\InventMobileW\obj\Debug\InventMobileW.csproj.AssemblyReference.cache
+C:\Users\iHugo\Desktop\invemt\InventMobileW\obj\Debug\InventMobileW.csproj.CoreCompileInputs.cache

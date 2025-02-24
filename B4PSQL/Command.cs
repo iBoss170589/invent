@@ -1,138 +1,135 @@
-﻿namespace B4PSQL
+﻿// Decompiled with JetBrains decompiler
+// Type: B4PSQL.Command
+// Assembly: 1, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: C68EF56F-DE83-49CD-89E2-6C7A60706012
+// Assembly location: C:\Users\iHugo\Documents\INVENTARIOS\InventMobileW.exe
+
+using System;
+using System.Data;
+using System.Data.SQLite;
+using System.IO;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+
+
+namespace B4PSQL
 {
-    using System;
-    using System.Data;
-    using System.Data.SQLite;
-    using System.IO;
-    using System.Text;
-    using System.Threading;
-    using System.Windows.Forms;
+  public class Command : IDisposable
+  {
+    private SQLiteCommand command;
+    private double scaleX = 1.0;
 
-    public class Command : IDisposable
+    public Command(string CommandText, object Connection)
     {
-        private SQLiteCommand command;
-        private double scaleX = 1.0;
-
-        public Command(string CommandText, object Connection)
-        {
-            this.command = new SQLiteCommand(CommandText, (SQLiteConnection) Connection);
-            this.scaleX = Thread.GetData(Thread.GetNamedDataSlot("scaleX"));
-        }
-
-        public void AddParameter(string Name)
-        {
-            this.command.Parameters.Add(new SQLiteParameter("@" + Name));
-        }
-
-        public string BytesToBLOB(byte[] Data)
-        {
-            StringBuilder builder = new StringBuilder((Data.Length * 2) + 6);
-            builder.Append("x'");
-            for (int i = 0; i < Data.Length; i++)
-            {
-                builder.Append(((int) Data[i]).ToString("x2"));
-            }
-            builder.Append("'");
-            return builder.ToString();
-        }
-
-        public int ExecuteNonQuery() => 
-            this.command.ExecuteNonQuery();
-
-        public object ExecuteReader() => 
-            this.command.ExecuteReader();
-
-        public void ExecuteTable(DataGrid Table, int Maximum)
-        {
-            DataTable table = Table.GetType().GetField("dataTable").GetValue(Table);
-            Table.DataSource = null;
-            table.DefaultView.RowFilter = "";
-            table.DefaultView.Sort = "";
-            table.Columns.Clear();
-            table.Rows.Clear();
-            Table.TableStyles[0].GridColumnStyles.Clear();
-            using (SQLiteDataReader reader = this.command.ExecuteReader())
-            {
-                object[] objArray = new object[reader.FieldCount];
-                for (int i = 0; i < reader.FieldCount; i++)
-                {
-                    string name = reader.GetName(i);
-                    DataGridColumnStyle column = this.NewColumnStyle(name);
-                    column.Width = (int) (75.0 * this.scaleX);
-                    Table.TableStyles[0].GridColumnStyles.Add(column);
-                    System.Type fieldType = reader.GetFieldType(i);
-                    if ((((fieldType == typeof(string)) || (fieldType == typeof(char))) || ((fieldType == typeof(bool)) || fieldType.IsArray)) || ((fieldType == typeof(DateTime)) || (fieldType == typeof(Guid))))
-                    {
-                        table.Columns.Add(name, typeof(string));
-                        objArray[i] = "";
-                    }
-                    else
-                    {
-                        table.Columns.Add(name, typeof(double));
-                        objArray[i] = 0.0;
-                    }
-                }
-                int num2 = 1;
-                object[] values = new object[reader.FieldCount];
-                while (reader.Read() && (num2++ != Maximum))
-                {
-                    reader.GetValues(values);
-                    for (int j = 0; j < values.Length; j++)
-                    {
-                        if (DBNull.Value.Equals(values[j]))
-                        {
-                            values[j] = objArray[j];
-                        }
-                    }
-                    DataRow row = table.NewRow();
-                    row.ItemArray = values;
-                    table.Rows.Add(row);
-                }
-                table.EndLoadData();
-                Table.DataSource = table.DefaultView;
-                reader.Close();
-            }
-        }
-
-        public string FileToBLOB(string File)
-        {
-            byte[] buffer = null;
-            using (FileStream stream = new FileStream(File, FileMode.Open))
-            {
-                buffer = new byte[stream.Length];
-                stream.Read(buffer, 0, (int) stream.Length);
-            }
-            return this.BytesToBLOB(buffer);
-        }
-
-        private DataGridTextBoxColumn NewColumnStyle(string name) => 
-            new DataGridTextBoxColumn { 
-                MappingName = name,
-                HeaderText = name
-            };
-
-        public void SetNullParameter(string Name)
-        {
-            this.command.Parameters["@" + Name].Value = null;
-        }
-
-        public void SetParameter(string Name, string Value)
-        {
-            this.command.Parameters["@" + Name].Value = Value;
-        }
-
-        void IDisposable.Dispose()
-        {
-            this.command.Dispose();
-        }
-
-        public string CommandText
-        {
-            get => 
-                this.command.CommandText;
-            set => 
-                this.command.CommandText = value;
-        }
+      this.command = new SQLiteCommand(CommandText, (SQLiteConnection) Connection);
+      this.scaleX = (double) Thread.GetData(Thread.GetNamedDataSlot(nameof (scaleX)));
     }
-}
 
+    public string CommandText
+    {
+      get => this.command.CommandText;
+      set => this.command.CommandText = value;
+    }
+
+    public int ExecuteNonQuery() => this.command.ExecuteNonQuery();
+
+    public object ExecuteReader() => (object) this.command.ExecuteReader();
+
+    public string BytesToBLOB(byte[] Data)
+    {
+      StringBuilder stringBuilder = new StringBuilder(Data.Length * 2 + 6);
+      stringBuilder.Append("x'");
+      for (int index = 0; index < Data.Length; ++index)
+        stringBuilder.Append(((int) Data[index]).ToString("x2"));
+      stringBuilder.Append("'");
+      return stringBuilder.ToString();
+    }
+
+    public string FileToBLOB(string File)
+    {
+      byte[] numArray = (byte[]) null;
+      using (FileStream fileStream = new FileStream(File, FileMode.Open))
+      {
+        numArray = new byte[fileStream.Length];
+        fileStream.Read(numArray, 0, (int) fileStream.Length);
+      }
+      return this.BytesToBLOB(numArray);
+    }
+
+    public void AddParameter(string Name)
+    {
+      this.command.Parameters.Add(new SQLiteParameter("@" + Name));
+    }
+
+    public void SetParameter(string Name, string Value)
+    {
+      this.command.Parameters["@" + Name].Value = (object) Value;
+    }
+
+    public void SetNullParameter(string Name)
+    {
+      this.command.Parameters["@" + Name].Value = (object) null;
+    }
+
+    void IDisposable.Dispose() => this.command.Dispose();
+
+    public void ExecuteTable(DataGrid Table, int Maximum)
+    {
+      DataTable dataTable = (DataTable) Table.GetType().GetField("dataTable").GetValue((object) Table);
+      Table.DataSource = (object) null;
+      dataTable.DefaultView.RowFilter = "";
+      dataTable.DefaultView.Sort = "";
+      dataTable.Columns.Clear();
+      dataTable.Rows.Clear();
+      Table.TableStyles[0].GridColumnStyles.Clear();
+      using (SQLiteDataReader sqLiteDataReader = this.command.ExecuteReader())
+      {
+        object[] objArray = new object[sqLiteDataReader.FieldCount];
+        for (int ordinal = 0; ordinal < sqLiteDataReader.FieldCount; ++ordinal)
+        {
+          string name = sqLiteDataReader.GetName(ordinal);
+          DataGridColumnStyle column = (DataGridColumnStyle) this.NewColumnStyle(name);
+          column.Width = (int) (75.0 * this.scaleX);
+          Table.TableStyles[0].GridColumnStyles.Add(column);
+          System.Type fieldType = sqLiteDataReader.GetFieldType(ordinal);
+          if (fieldType == typeof (string) || fieldType == typeof (char) || fieldType == typeof (bool) || fieldType.IsArray || fieldType == typeof (DateTime) || fieldType == typeof (Guid))
+          {
+            dataTable.Columns.Add(name, typeof (string));
+            objArray[ordinal] = (object) "";
+          }
+          else
+          {
+            dataTable.Columns.Add(name, typeof (double));
+            objArray[ordinal] = (object) 0.0;
+          }
+        }
+        int num = 1;
+        object[] values = new object[sqLiteDataReader.FieldCount];
+        while (sqLiteDataReader.Read() && num++ != Maximum)
+        {
+          sqLiteDataReader.GetValues(values);
+          for (int index = 0; index < values.Length; ++index)
+          {
+            if (DBNull.Value.Equals(values[index]))
+              values[index] = objArray[index];
+          }
+          DataRow row = dataTable.NewRow();
+          row.ItemArray = values;
+          dataTable.Rows.Add(row);
+        }
+        dataTable.EndLoadData();
+        Table.DataSource = (object) dataTable.DefaultView;
+        sqLiteDataReader.Close();
+      }
+    }
+
+    private DataGridTextBoxColumn NewColumnStyle(string name)
+    {
+      DataGridTextBoxColumn gridTextBoxColumn = new DataGridTextBoxColumn();
+      gridTextBoxColumn.MappingName = name;
+      gridTextBoxColumn.HeaderText = name;
+      return gridTextBoxColumn;
+    }
+  }
+}

@@ -1,118 +1,89 @@
-﻿namespace B4PSQL
+﻿// Decompiled with JetBrains decompiler
+// Type: B4PSQL.Connection
+// Assembly: 1, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: C68EF56F-DE83-49CD-89E2-6C7A60706012
+// Assembly location: C:\Users\iHugo\Documents\INVENTARIOS\InventMobileW.exe
+
+using System;
+using System.Data;
+using System.Data.SQLite;
+using System.Windows.Forms;
+
+
+namespace B4PSQL
 {
-    using System;
-    using System.Data;
-    using System.Data.SQLite;
-    using System.Windows.Forms;
+  public class Connection : IDisposable
+  {
+    private SQLiteConnection connection;
+    private SQLiteTransaction transaction;
 
-    public class Connection : IDisposable
+    public double DLLVersion => 1.6;
+
+    public Connection() => this.connection = new SQLiteConnection();
+
+    public object Value
     {
-        private SQLiteConnection connection = new SQLiteConnection();
-        private SQLiteTransaction transaction;
-
-        public void BeginTransaction()
-        {
-            this.transaction = this.connection.BeginTransaction();
-        }
-
-        public void ChangePassword(string password)
-        {
-            this.connection.ChangePassword(password);
-        }
-
-        public void Close()
-        {
-            this.connection.Close();
-        }
-
-        public void CreateSQLTable(DataGrid Table, string SQLTableName)
-        {
-            DataTable table = Table.GetType().GetField("dataTable").GetValue(Table);
-            string str = "";
-            string str2 = "";
-            for (int i = 0; i < table.Columns.Count; i++)
-            {
-                string str3;
-                if (table.Columns[i].DataType == typeof(double))
-                {
-                    str3 = "REAL";
-                }
-                else
-                {
-                    str3 = "TEXT";
-                }
-                string str4 = str;
-                str = str4 + "'" + table.Columns[i].ColumnName + "' " + str3 + ",";
-                str2 = str2 + ":p" + i.ToString() + ",";
-            }
-            str = str.Remove(str.Length - 1, 1);
-            str2 = str2.Remove(str2.Length - 1, 1);
-            using (SQLiteCommand command = new SQLiteCommand(this.connection))
-            {
-                using (SQLiteTransaction transaction = this.connection.BeginTransaction())
-                {
-                    command.CommandText = "CREATE TABLE '" + SQLTableName + "' (" + str + ")";
-                    command.ExecuteNonQuery();
-                    command.CommandText = "INSERT INTO '" + SQLTableName + "' VALUES (" + str2 + ")";
-                    SQLiteParameter[] parameterArray = new SQLiteParameter[table.Columns.Count];
-                    for (int j = 0; j < table.Columns.Count; j++)
-                    {
-                        parameterArray[j] = new SQLiteParameter("p" + j.ToString());
-                        command.Parameters.Add(parameterArray[j]);
-                    }
-                    for (int k = 0; k < table.Rows.Count; k++)
-                    {
-                        for (int m = 0; m < table.Columns.Count; m++)
-                        {
-                            parameterArray[m].Value = table.Rows[k][m];
-                        }
-                        command.ExecuteNonQuery();
-                    }
-                    transaction.Commit();
-                }
-            }
-        }
-
-        public void Dispose()
-        {
-            this.connection.Close();
-        }
-
-        public void EndTransaction()
-        {
-            this.transaction.Commit();
-        }
-
-        public void Open(string ConnectionString)
-        {
-            this.Open(ConnectionString, null);
-        }
-
-        public void Open(string ConnectionString, string password)
-        {
-            this.connection.ConnectionString = ConnectionString;
-            if (password != null)
-            {
-                this.connection.SetPassword(password);
-            }
-            this.connection.Open();
-        }
-
-        public void RemovePassword()
-        {
-            this.connection.ChangePassword((string) null);
-        }
-
-        public double DLLVersion =>
-            1.6;
-
-        public object Value
-        {
-            get => 
-                this.connection;
-            set => 
-                this.connection = value;
-        }
+      get => (object) this.connection;
+      set => this.connection = (SQLiteConnection) value;
     }
-}
 
+    public void Open(string ConnectionString) => this.Open(ConnectionString, (string) null);
+
+    public void Open(string ConnectionString, string password)
+    {
+      this.connection.ConnectionString = ConnectionString;
+      if (password != null)
+        this.connection.SetPassword(password);
+      this.connection.Open();
+    }
+
+    public void ChangePassword(string password) => this.connection.ChangePassword(password);
+
+    public void RemovePassword() => this.connection.ChangePassword((string) null);
+
+    public void Close() => this.connection.Close();
+
+    public void BeginTransaction() => this.transaction = this.connection.BeginTransaction();
+
+    public void EndTransaction() => this.transaction.Commit();
+
+    public void CreateSQLTable(DataGrid Table, string SQLTableName)
+    {
+      DataTable dataTable = (DataTable) Table.GetType().GetField("dataTable").GetValue((object) Table);
+      string str1 = "";
+      string str2 = "";
+      for (int index = 0; index < dataTable.Columns.Count; ++index)
+      {
+        string str3 = dataTable.Columns[index].DataType != typeof (double) ? "TEXT" : "REAL";
+        str1 = str1 + "'" + dataTable.Columns[index].ColumnName + "' " + str3 + ",";
+        str2 = str2 + ":p" + index.ToString() + ",";
+      }
+      string str4 = str1.Remove(str1.Length - 1, 1);
+      string str5 = str2.Remove(str2.Length - 1, 1);
+      using (SQLiteCommand sqLiteCommand = new SQLiteCommand(this.connection))
+      {
+        using (SQLiteTransaction sqLiteTransaction = this.connection.BeginTransaction())
+        {
+          sqLiteCommand.CommandText = "CREATE TABLE '" + SQLTableName + "' (" + str4 + ")";
+          sqLiteCommand.ExecuteNonQuery();
+          sqLiteCommand.CommandText = "INSERT INTO '" + SQLTableName + "' VALUES (" + str5 + ")";
+          SQLiteParameter[] sqLiteParameterArray = new SQLiteParameter[dataTable.Columns.Count];
+          for (int index = 0; index < dataTable.Columns.Count; ++index)
+          {
+            sqLiteParameterArray[index] = new SQLiteParameter("p" + index.ToString());
+            sqLiteCommand.Parameters.Add(sqLiteParameterArray[index]);
+          }
+          for (int index = 0; index < dataTable.Rows.Count; ++index)
+          {
+            for (int columnIndex = 0; columnIndex < dataTable.Columns.Count; ++columnIndex)
+              sqLiteParameterArray[columnIndex].Value = dataTable.Rows[index][columnIndex];
+            sqLiteCommand.ExecuteNonQuery();
+          }
+          sqLiteTransaction.Commit();
+        }
+      }
+    }
+
+    public void Dispose() => this.connection.Close();
+  }
+}

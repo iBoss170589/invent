@@ -1,64 +1,60 @@
-﻿namespace B4PSQL
+﻿// Decompiled with JetBrains decompiler
+// Type: B4PSQL.DataReader
+// Assembly: 1, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: C68EF56F-DE83-49CD-89E2-6C7A60706012
+// Assembly location: C:\Users\iHugo\Documents\INVENTARIOS\InventMobileW.exe
+
+using System;
+using System.Data.SQLite;
+using System.Drawing;
+using System.IO;
+
+
+namespace B4PSQL
 {
-    using System;
-    using System.Data.SQLite;
-    using System.Drawing;
-    using System.IO;
+  public class DataReader : IDisposable
+  {
+    private SQLiteDataReader reader;
 
-    public class DataReader : IDisposable
+    public object Value
     {
-        private SQLiteDataReader reader;
-
-        public void Close()
-        {
-            this.reader.Close();
-        }
-
-        public void Dispose()
-        {
-            if (this.reader != null)
-            {
-                this.reader.Close();
-            }
-        }
-
-        public byte[] GetBytes(int Index)
-        {
-            long num = this.reader.GetBytes(Index, 0L, null, 0, 0);
-            byte[] buffer = new byte[num];
-            this.reader.GetBytes(Index, 0L, buffer, 0, (int) num);
-            return buffer;
-        }
-
-        public Bitmap GetImage(int Index)
-        {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                byte[] bytes = this.GetBytes(Index);
-                stream.Write(bytes, 0, bytes.Length);
-                return new Bitmap(stream);
-            }
-        }
-
-        public string GetValue(int Index) => 
-            this.reader.GetValue(Index).ToString();
-
-        public bool IsDBNull(int index) => 
-            this.reader.IsDBNull(index);
-
-        public bool ReadNextRow() => 
-            this.reader.Read();
-
-        public object Value
-        {
-            get => 
-                this.reader;
-            set => 
-                this.reader = value;
-        }
-
-        public int FieldCount =>
-            this.reader.FieldCount;
+      get => (object) this.reader;
+      set => this.reader = (SQLiteDataReader) value;
     }
-}
 
+    public bool ReadNextRow() => this.reader.Read();
+
+    public string GetValue(int Index) => this.reader.GetValue(Index).ToString();
+
+    public byte[] GetBytes(int Index)
+    {
+      long bytes = this.reader.GetBytes(Index, 0L, (byte[]) null, 0, 0);
+      byte[] buffer = new byte[bytes];
+      this.reader.GetBytes(Index, 0L, buffer, 0, (int) bytes);
+      return buffer;
+    }
+
+    public Bitmap GetImage(int Index)
+    {
+      using (MemoryStream memoryStream = new MemoryStream())
+      {
+        byte[] bytes = this.GetBytes(Index);
+        memoryStream.Write(bytes, 0, bytes.Length);
+        return new Bitmap((Stream) memoryStream);
+      }
+    }
+
+    public int FieldCount => this.reader.FieldCount;
+
+    public bool IsDBNull(int index) => this.reader.IsDBNull(index);
+
+    public void Close() => this.reader.Close();
+
+    public void Dispose()
+    {
+      if (this.reader == null)
+        return;
+      this.reader.Close();
+    }
+  }
+}
