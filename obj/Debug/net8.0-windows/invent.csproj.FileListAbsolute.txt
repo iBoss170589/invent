@@ -1,0 +1,4 @@
+C:\Users\iHugo\source\repos\invent\invent\obj\Debug\net8.0-windows\invent.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\iHugo\source\repos\invent\invent\obj\Debug\net8.0-windows\invent.AssemblyInfoInputs.cache
+C:\Users\iHugo\source\repos\invent\invent\obj\Debug\net8.0-windows\invent.AssemblyInfo.cs
+C:\Users\iHugo\source\repos\invent\invent\obj\Debug\net8.0-windows\invent.csproj.CoreCompileInputs.cache
