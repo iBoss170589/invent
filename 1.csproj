@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D93591B2-4B34-4D77-B948-2157A22A1D9A}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <AssemblyName>1</AssemblyName>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data.SQLite" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="MSSQL" />
+    <Reference Include="bList" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Compile Include="Global.cs" />
+    <Compile Include="FormLib\FormLib.cs" />
+    <Compile Include="FormLib\ContextMenu.cs" />
+    <Compile Include="B4PSQL\Connection.cs" />
+    <Compile Include="B4PSQL\Command.cs" />
+    <Compile Include="B4PSQL\DataReader.cs" />
+    <Compile Include="Dbasic\DDouble.cs" />
+    <Compile Include="Dbasic\IStream.cs" />
+    <Compile Include="Dbasic\IEnhancedControl.cs" />
+    <Compile Include="Dbasic\b4p.cs" />
+    <Compile Include="Dbasic\Other.cs" />
+    <Compile Include="Dbasic\CStreamRandom.cs" />
+    <Compile Include="Dbasic\CStreamReader.cs" />
+    <Compile Include="Dbasic\CStreamWriter.cs" />
+    <Compile Include="Dbasic\CCompareNumbers.cs" />
+    <Compile Include="Dbasic\CHtControls.cs" />
+    <Compile Include="Dbasic\IImage.cs" />
+    <Compile Include="Dbasic\IText.cs" />
+    <Compile Include="Dbasic\IEnabled.cs" />
+    <Compile Include="Dbasic\IChecked.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedForm.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedObject.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedTimer.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedLabel.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedImageButton.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedTable.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedRadioBtn.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedButton.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedTextBox.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedImage.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedPanel.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedNumUpDown.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedMenu.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedCombo.cs" />
+    <Compile Include="Dbasic\EnhancedControls\CEnhancedCheckBox.cs" />
+    <EmbeddedResource Include="b4p.ok.png" />
+    <EmbeddedResource Include="b4p.lupa2.jpg" />
+    <EmbeddedResource Include="b4p.images~(4).jpg" />
+    <EmbeddedResource Include="INVEN1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+</Project>
